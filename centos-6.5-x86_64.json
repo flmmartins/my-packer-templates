@@ -7,9 +7,9 @@
         "guest_os_type": "RedHat_64",
         "disk_size": 40960,
 
-        "iso_url": "http://mirrors.kernel.org/centos/6.5/isos/x86_64/CentOS-6.5-x86_64-minimal.iso",
-        "iso_checksum": "f21a71e8e31df73297bdd1ccd4a64a36831284bd",
-        "iso_checksum_type": "sha1",
+        "iso_url": "/Users/fmartins/Google Drive/ISOS/CentOS-6.5-x86_64-minimal.iso",
+        "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
+        "iso_checksum_type": "md5",
 
         "boot_command": [
             "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.5-x86_64/ks.cfg<enter><wait>"
