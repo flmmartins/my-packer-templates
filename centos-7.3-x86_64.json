@@ -1,0 +1,39 @@
+{
+    "builders": [{
+        "type": "virtualbox-iso",
+		"boot_command": [
+            "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-7.3-ks.cfg<enter><wait>"
+        ],
+        "virtualbox_version_file": ".vbox_version",
+        "headless": true,
+
+        "guest_os_type": "RedHat_64",
+        "disk_size": 40960,
+
+        "iso_urls": [
+			"H:/Backup/CentOS-7-x86_64-Minimal-1611.iso",
+			"http://ftp.wrz.de/pub/CentOS/7/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso"
+		],
+        "iso_checksum": "27bd866242ee058b7a5754e83d8ee8403e216b93d130d800852a96f41c34d86a",
+        "iso_checksum_type": "sha256",
+      
+        "http_directory": "http",
+        "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+
+        "ssh_username": "vagrant",
+        "ssh_password": "vagrant",
+        "ssh_port": 22,
+        "ssh_wait_timeout": "10000s",
+
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--memory", "512"],
+            ["modifyvm", "{{.Name}}", "--cpus", "1"]
+        ],
+
+        "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p"
+    }],
+    "post-processors": [{
+        "output": "build/centos-7.3.box",
+        "type": "vagrant"
+    }]
+}
