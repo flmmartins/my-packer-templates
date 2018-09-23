@@ -1,0 +1,43 @@
+{
+  "variables": {
+    "iso_url": "http://mirror.serverbeheren.nl/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso",
+    "iso_check_type": "sha1",
+    "iso_check": "13675c6f74880e7ff3481b91bdaf925ce81bda8f",
+    "vmlinuz_file": "/images/pxeboot/vmlinuz",
+    "initrd_file": "/images/pxeboot/initrd.img",
+    "ks_file": "centos7-x86_64/ks.cfg",
+    "hyperv_switch": "HyperVNAT"
+  },
+  "builders": [
+  {
+    "type": "hyperv-iso",
+    "vm_name": "CentOS75",
+    "iso_urls": "{{ user `iso_url`}}",
+    "iso_checksum": "{{user `iso_check`}}",
+    "iso_checksum_type": "{{user `iso_check_type`}}",
+    "switch_name": "{{ user `hyperv_switch`}}",
+    "communicator": "ssh",
+    "cpu": 1,
+    "disk_size": 20480,
+    "generation": 1,
+    "guest_additions_mode": "disable",
+    "headless": false,
+    "ram_size": 1024,
+    "enable_mac_spoofing": true,
+    "enable_dynamic_memory": false,
+    "skip_compaction": false,
+    "enable_virtualization_extensions": false,
+    "enable_secure_boot": false,
+    "output_directory": "PCENTOS",
+    "boot_command": [
+      "<tab> text {{user `vmlinuz_file`}} initrd={{user `initrd_file`}} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `ks_file`}}<enter><wait>"
+    ],
+    "http_directory": "http",
+    "boot_wait": "5s",
+    "ssh_timeout": "20m",
+    "ssh_username": "vagrant",
+    "ssh_password": "vagrant",
+    "ssh_port": 22,
+    "shutdown_command": "sudo -S shutdown -P now"
+  }]
+}

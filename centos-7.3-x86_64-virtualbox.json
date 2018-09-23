@@ -22,7 +22,7 @@
     {
       "type": "virtualbox-iso",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-7.3-ks.cfg<enter><wait>"
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos7-x86_64/ks.cfg<enter><wait>"
       ],
       "virtualbox_version_file": ".vbox_version",
       "headless": false,
