@@ -20,14 +20,8 @@
     "cpu": 1,
     "disk_size": 20480,
     "generation": 1,
-    "guest_additions_mode": "disable",
     "headless": false,
     "ram_size": 1024,
-    "enable_mac_spoofing": true,
-    "enable_dynamic_memory": false,
-    "skip_compaction": false,
-    "enable_virtualization_extensions": false,
-    "enable_secure_boot": false,
     "output_directory": "PCENTOS",
     "boot_command": [
       "<tab> text {{user `vmlinuz_file`}} initrd={{user `initrd_file`}} inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `ks_file`}}<enter><wait>"
