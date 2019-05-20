@@ -1,6 +1,4 @@
----
-title: My Packer Provisioning
----
+# My Packer Templates
 
 [Packer](http://packer.io) templates for Linux boxes. v0 of this templates are
 from https://bitbucket.org/ariya/packer-vagrant-linux
