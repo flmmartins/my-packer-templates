@@ -11,21 +11,33 @@ from https://bitbucket.org/ariya/packer-vagrant-linux
 
 -   Ubuntu 12.04 LTS (Precise Pangolin) 64-bit
 
+-   Ubuntu Desktop 19.04 64-bit
+
 Use the box (generated in `build` subdirectory) with
 [Vagrant](http://vagrantup.com) and [VirtualBox](http://virtualbox.org).
 
  
 
-How to run packer
------------------
+## How to run packer & generate a box
 
  
-
 Install [Packer](www.packer.io)
 
-Run: \$packer build \<json\>
+Run: ```packer build \<json\>```
 
- 
+Afterwards if you want you can do:
+
+```vagrant box add build/name of your box --name another-name```
+
+## (Optional) Running ansible to configure OS inside packer
+If you are running the ansible provisioner, make sure to clone your ansible repository inside this one before continuing or make the necessary adjustments to accomodate your ansible roles. Check the example in **ubuntu-desktop.json
+
+
+## Using the Box
+Go to main programming folder
+
+Run ```vagrant init <your box name>```
+
 -
 
 Known Errors with Packer
