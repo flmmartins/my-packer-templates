@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+  config.vm.provider :virtualbox do |virtualbox, override|
+    virtualbox.gui = false
+    virtualbox.customize ["modifyvm", :id, "--cpus", 1]
+    virtualbox.customize ["modifyvm", :id, "--audiocontroller", "hda"]
+    virtualbox.customize ["modifyvm", :id, "--memory", 4096]
+    virtualbox.customize ["modifyvm", :id, "--vram", 128]
+    virtualbox.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+  end
+  
+  # Enable internet access
+  config.vm.network "public_network"
+
+  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+end

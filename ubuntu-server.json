@@ -1,0 +1,93 @@
+{
+    "variables": {
+        "name": "ubuntu-20.04-server-amd64",
+        "iso_checksum_type": "sha256",
+        "iso_checksum": "caf3fd69c77c439f162e2ba6040e9c320c4ff0d69aad1340a514319a9264df9f",
+        "iso": "/ubuntu-20.04-live-server-amd64.iso",
+        "ubuntu_codename": "20.04",
+        "ubuntu_mirror": "https://releases.ubuntu.com/",
+        "packer_images_output_dir": "build",
+        "cpus": "2",
+        "memory": "4096",
+        "ssh_username": "vagrant",
+        "ssh_password": "vagrant",
+        "preseed_file_path": "/ubuntu-server/preseed.cfg",
+        "disk_size": "51200",
+        "headless": "true",
+        "box_vagrantfile_template": "Vagrantfile-linux-server.template",
+        "ansible_playbook":"myusersetup/playbook.yml"
+    },
+  
+    "builders":
+    [{
+        "vm_name": "{{ user `name` }}",
+        "type": "virtualbox-iso",
+        "guest_os_type": "Ubuntu_64",
+        "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+        "iso_checksum":"{{ user `iso_checksum` }}",
+        "iso_urls": [ "{{ user `ubuntu_mirror` }}{{ user `ubuntu_codename` }}{{ user `iso` }}" ],
+        "ssh_username": "{{ user `ssh_username` }}",
+        "ssh_password": "{{ user `ssh_password` }}",
+        "ssh_wait_timeout": "60m",
+        "headless": "{{ user `headless` }}",
+        "output_directory": "{{ user `name` }}-virtualbox-iso",
+        "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
+        "hard_drive_interface": "sata",
+        "disk_size": "{{ user `disk_size` }}",
+        "vboxmanage": [
+         [
+            "modifyvm",
+            "{{ .Name }}",
+            "--cpus",
+            "{{ user `cpus` }}"
+         ],
+         [
+            "modifyvm",
+            "{{ .Name }}",
+            "--memory",
+            "{{ user `memory` }}"
+        ],
+        [
+            "modifyvm",
+            "{{ .Name }}",
+            "--audiocontroller",
+            "hda"
+        ]
+      ],
+      "boot_wait": "5s",
+      "boot_command":
+      [
+        "<tab>",
+        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}{{ user `preseed_file_path` }} ",
+        "auto=true ",
+        "net.ifnames=0 ",
+        "hostname=localhost ",
+        "<enter>"
+      ],
+      "http_directory": "http"
+    }
+  ],
+   "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -S -E bash -x '{{ .Path }}'",
+      "scripts": [
+        "scripts/ubuntu/update.sh",
+        "scripts/ubuntu/disable_apt-daily.sh",
+        "scripts/ubuntu/virtualbox-guest-x11.sh",
+        "scripts/linux-common/add_vagrant_ssh_key.sh",
+        "scripts/linux-common/cleanup.sh",
+        "scripts/ubuntu/install_ansible.sh"      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "vagrant",
+        "compression_level": 9,
+        "vagrantfile_template": "{{ user `box_vagrantfile_template` }}",
+        "output": "{{ user `packer_images_output_dir` }}/{{ user `name` }}-{{ .Provider }}.box"
+      }
+    ]
+  ]
+}

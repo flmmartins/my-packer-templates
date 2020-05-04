@@ -14,7 +14,7 @@ All Ubuntu run on top of VirtualBox
 
 * Select ubuntu-desktop for building Ubuntu Desktop 20.04 64-bit
 
-* Select ubuntu-server for building Ubuntu Desktop 18.04 64-bit headless
+* Select ubuntu-server for building Ubuntu Desktop 20.04 64-bit headless
 
 
 **Optional** 
