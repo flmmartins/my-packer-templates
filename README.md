@@ -14,10 +14,10 @@ All Ubuntu run on top of VirtualBox
 
 * Select ubuntu-desktop for building Ubuntu Desktop 19.04 64-bit
 
-* Select ubuntu-server for building Ubuntu Desktop 20.04 64-bit headless
+* Select ubuntu-server for building Ubuntu Server 20.04 64-bit headless
 
 **Note about 20.04**
-20.04 no longer support [preseed.cfg](https://askubuntu.com/questions/1233454/how-to-preseed-ubuntu-20-04-desktop) so to use it we need to refer to ubuntu 20.04 "legacy images" for now and they only work for server json
+20.04 no longer support [preseed.cfg](https://askubuntu.com/questions/1233454/how-to-preseed-ubuntu-20-04-desktop) so to use it we need to refer to ubuntu 20.04 "legacy images" for now.
 
 **Optional** 
 You can use the ubuntu jsons to build any ubuntu desktop or server with the version of your choosing. Edit the variables inside the json according to what you want. If not, the version indicated will be installed.
