@@ -11,7 +11,7 @@
         "memory": "4096",
         "ssh_username": "vagrant",
         "ssh_password": "vagrant",
-        "preseed_file_path": "/ubuntu-server/preseed.cfg",
+        "preseed_file_path": "/ubuntu-server/preseed-ubuntu20.cfg",
         "disk_size": "51200",
         "headless": "true",
         "box_vagrantfile_template": "Vagrantfile-linux-server.template",
