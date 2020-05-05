@@ -1,8 +1,8 @@
 {
   "variables": {
-    "iso_url": "http://mirror.serverbeheren.nl/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1804.iso",
-    "iso_check_type": "sha1",
-    "iso_check": "13675c6f74880e7ff3481b91bdaf925ce81bda8f",
+    "iso_url": "http://ftp.tudelft.nl/centos.org/8.1.1911/isos/x86_64/CentOS-8.1.1911-x86_64-dvd1.iso",
+    "iso_check_type": "sha256",
+    "iso_check": "7fea13202bf2f26989df4175aace8fdc16e1137f7961c33512cbfad844008948",
     "vmlinuz_file": "/images/pxeboot/vmlinuz",
     "initrd_file": "/images/pxeboot/initrd.img",
     "ks_file": "centos7-x86_64/ks.cfg",

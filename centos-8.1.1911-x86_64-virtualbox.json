@@ -1,0 +1,93 @@
+{
+   "variables": {
+        "name": "centos-8.1.1911-x86_64",
+        "iso_checksum_type": "sha256",
+        "iso_checksum": "3ee3f4ea1538e026fff763e2b284a6f20b259d91d1ad5688f5783a67d279423b",
+        "iso": "8.1.1911/isos/x86_64/CentOS-8.1.1911-x86_64-dvd1.iso",
+        "centos_mirror": "http://ftp.tudelft.nl/centos.org/",
+        "packer_images_output_dir": "build",
+        "cpus": "2",
+        "memory": "4096",
+        "ssh_username": "vagrant",
+        "ssh_password": "vagrant",
+        "ks_file_path": "/centos8/ks.cfg",
+        "disk_size": "51200",
+        "headless": "true",
+        "box_vagrantfile_template": "Vagrantfile-linux-server.template",
+        "ansible_playbook":"myusersetup/playbook.yml"
+   
+    },
+    "builders":
+    [{
+      "vm_name": "{{ user `name` }}",
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}{{ user `ks_file_path` }} <enter><wait>"
+      ],
+      "virtualbox_version_file": ".vbox_version",
+      "headless": "{{ user `headless` }}",
+      "http_directory": "http",
+      "guest_os_type": "RedHat_64",
+      "disk_size": "{{ user `disk_size` }}",
+      "iso_urls": [
+        "{{ user `centos_mirror` }}{{ user `iso` }}"
+      ],
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "1800s",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "4096"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "2"
+        ]
+      ],
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'packer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": [
+        "dnf -y update",
+        "dnf -y install python3",
+        "alternatives --set python /usr/bin/python3",
+        "pip3 install ansible"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'packer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/linux-common/add_vagrant_ssh_key.sh",
+        "scripts/linux-common/vboxguest.sh"      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'packer'|{{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": [
+        "dnf clean all"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "compression_level": 9,
+      "vagrantfile_template": "{{ user `box_vagrantfile_template` }}",
+      "output": "{{ user `packer_images_output_dir` }}/{{ user `name` }}-{{ .Provider }}.box"
+    }
+  ]
+}

@@ -29,11 +29,7 @@ You can use the ubuntu19 jsons to build any ubuntu desktop or server with the ve
 
 ## CentOs Boxes
 
-* CentOS 8 64 bit on VirtualBox
-
-**Optional** 
-You can use the json on Virtualbox to build any CentOS with the version of your choosing. Edit the variables inside the json according to what you want. If not, the version indicated will be installed.
-
+* CentOS 8 64 bit Server on VirtualBox
 
 * CentOS 7 64-bit on HyperV.
 
