@@ -58,6 +58,24 @@ Run ```vagrant init <your box name>```
 
 This will generate a Vagrantfile based on the Vagranfile template.
 
+# Defining names and hostnames in Vagrant
+This not related to packer necessarily but if you want to name your VM your way instead of using Vagrant defaults you edit the Vagrant file like:
+
+
+```
+Vagrant.configure("2") do |config|
+ # Hostname
+  config.vm.hostname = "myubuntuvm"
+  # Replace default in vagrant
+  config.vm.define "myubuntuvm"
+  # Name in GUI
+  config.vm.provider :virtualbox do |vb|
+    vb.name = "myubuntuvm"
+  end
+end
+```
+
+
 # Box configuration details
 
 ## VM resources & Vagrantfile
