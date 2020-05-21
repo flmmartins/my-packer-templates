@@ -3,10 +3,14 @@ Vagrant.configure("2") do |config|
     virtualbox.gui = true
     virtualbox.customize ["modifyvm", :id, "--cpus", 2]
     virtualbox.customize ["modifyvm", :id, "--audiocontroller", "hda"]
-    virtualbox.customize ["modifyvm", :id, "--memory", 8192]
+
+    virtualbox.customize ["modifyvm", :id, "--memory", "8192"]
     virtualbox.customize ["modifyvm", :id, "--accelerate2dvideo", "on"]
+    virtualbox.customize ['modifyvm', :id, '--accelerate3d', 'on']
     virtualbox.customize ["modifyvm", :id, "--vram", 128]
     virtualbox.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    # Enable better graphics
+    virtualbox.customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']
   end
   
   # Enable internet access
