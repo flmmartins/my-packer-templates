@@ -58,8 +58,53 @@ Run ```vagrant init <your box name>```
 
 This will generate a Vagrantfile based on the Vagranfile template.
 
-# Defining names and hostnames in Vagrant
-This not related to packer necessarily but if you want to name your VM your way instead of using Vagrant defaults you edit the Vagrant file like:
+# Box configuration details
+
+## VM resources & Vagrantfile
+
+The boxes resources will be configured by Vagrantfile templates for use but you can overwrite it using your own Vagrantfile. The only thing that the json does is to set the disk size.
+
+## OS configuration files
+
+The unattended configuration files that will setup the box are in the http folder. They automate the OS installation screens
+
+## Runing ansible to configure OS
+
+*PS: Ansible is currently not working for Ubuntu Focal*
+Ansible has not been released for Ubuntu Focal as per https://github.com/ansible/ansible/issues/69414
+
+
+You have two options to configure your OS with ansible: 
+
+1. You use Packer to configure your Basic Vagrant Box and then after you can run Vagrant to run Ansible
+2. You use Packer to configure everything and packer will run ansible. The resulting Vagrant box will contain everything. 
+
+### Running ansible from Vagrant
+Packer creates a very basic Vagranfile. When you do a **vagrant init** you will create your own Vagrant file and you can define some additional machine specific configuration.
+
+After you create your ISO, you can run Ansible through vagrant by adding the following to your Vagrantfile. More options can be found in https://www.vagrantup.com/docs/provisioning/ansible.html
+
+
+```
+Vagrant.configure("2") do |config|
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "myansible/playbook.yml"
+    ansible.verbose = true
+  end
+end
+```
+
+### (WIP) Running ansible from Packer
+
+TODO: This is WIP
+
+
+# Vagrantfile tips
+
+Packer creates a very basic Vagranfile. When you do a **vagrant init** you will create your own Vagrant file and you can define some additional machine specific configuration.
+
+## Defining names and hostnames in Vagrant
+This not related to packer necessarily but if you want to name your VM your way instead of using Vagrant defaults you edit the Vagrant and even overwrite some configs.
 
 
 ```
@@ -75,22 +120,38 @@ Vagrant.configure("2") do |config|
 end
 ```
 
+## Define multiple machines in one file
 
-# Box configuration details
+Once you define multi machines in one vagrantfile you can target a machine using vagrant
 
-## VM resources & Vagrantfile
+```
+vagrant up myubuntuvn
+```
 
-The boxes resources will be configured by Vagrantfile templates for use but you can overwrite it using your own Vagrantfile. The only thing that the json does is to set the disk size.
+Here is a snipet
 
-## OS configuration files
+```
+Vagrant.configure("2") do |config|
 
-The unattended configuration files that will setup the box are in the http folder. They automate the OS installation screens
+  config.vm.define "myubuntuvm" do |myubuntuvm|
 
-## (WIP not ready) Runing ansible to configure OS
+    myubuntuvm.vm.box = "ubuntu-20.04-desktop-amd64"
+    myubuntuvm.vm.hostname = "myubuntuvm"
+    myubuntuvm.vm.provider :virtualbox do |virtualbox|
+      virtualbox.name = "myubuntuvm"
+    end
+  end
 
-After you install the OS, ansible can be used to fully configure your OS
+  config.vm.define "mydevvm" do |mydevvm|
 
-If you are running the ansible provisioner, make sure to clone your ansible repository inside this one before continuing or make the necessary adjustments to accomodate your ansible roles. Check the variables inside the json files
+    mydevvm.vm.box = "ubuntu-19.10-desktop-amd64"
+    mydevvm.vm.hostname = "mydevvm"
+    mydevvm.vm.provider :virtualbox do |virtualbox|
+      virtualbox.name = "mydevvm"
+    end
+  end
+end
+```
 
 
 # Known Errors with Packer
