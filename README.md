@@ -1,7 +1,16 @@
 
 Generate [Vagrant Boxes](http://vagrantup.com) in [VirtualBox](http://virtualbox.org) using [Packer](http://packer.io)
 
-There's also a [CentOS Box](http://vagrantup.com) in HyperV 
+There's also a [CentOS Box](http://vagrantup.com) in HyperV
+
+# Mac M1 issues
+
+Not working with Virtualbox 7 or qemu. Attemps were saved on branch mac-m1.
+
+## Using UTM in Mac M1
+
+Manual installation. Download ARM Ubuntu from https://ubuntu.com/download/server/arm and follow UTM installation guide.
+
 
 
 # List of Boxes (images) you can generate
