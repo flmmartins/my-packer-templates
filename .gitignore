@@ -1,8 +1,14 @@
 # Cache objects
 packer_cache/
 
-# For built boxes
+# Post compress artifacts
 **.box
+**.tar.gz
+**.checksum
 
-# My clone ansible repo
-myusersetup/
+# Output directory of packer
+buids/
+
+#Other
+.vagrant
+.DS_Store
