@@ -3,13 +3,17 @@ Vagrant.configure("2") do |config|
     virtualbox.gui = false
     virtualbox.customize ["modifyvm", :id, "--cpus", 1]
     virtualbox.customize ["modifyvm", :id, "--audiocontroller", "hda"]
-    virtualbox.customize ["modifyvm", :id, "--memory", 4096]
+    virtualbox.customize ["modifyvm", :id, "--memory", 2]
     virtualbox.customize ["modifyvm", :id, "--vram", 128]
     virtualbox.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
   end
-  
+
+  # Set up your own ssh key
+  config.ssh.private_key_path = ~/.ssh/id_ed25519
+  config.ssh.forward_agent = true
+
   # Enable internet access
   config.vm.network "public_network"
 
-  config.vm.synced_folder ".", "/vagrant", type: "nfs"
+  config.vm.synced_folder ".", "/vagrant"
 end

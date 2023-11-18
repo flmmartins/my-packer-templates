@@ -1,5 +1,5 @@
 # Cache objects
-packer_cache/
+packer_cache/**
 
 # Post compress artifacts
 **.box
@@ -7,8 +7,9 @@ packer_cache/
 **.checksum
 
 # Output directory of packer
-buids/
+buids/**
 
 #Other
 .vagrant
 .DS_Store
+Vagrantfile

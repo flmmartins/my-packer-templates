@@ -22,14 +22,20 @@ variable "memory_mb" {
   default = 2048
 }
 
-variable "machine_credentials" {
-  default     = {
-    user          = "admin"
-    # packerubuntu
-    init_pwd      = "$6$xyz$74AlwKA3Z5n2L6ujMzm/zQXHCluA4SRc2mBfO2/O5uUc2yM2n2tnbBMi/IVRLJuKwfjrLZjAT7agVfiK7arSy/"
-    ssh_key       = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK5JiluJIXtH4tDDC9YwoH8VTxTpKTVVklwPTUeqZDCU flmmartins"
-  }
-  description = "Packer will use auto generated ssh_key user. The ssh_key can belong to a human"
+variable "machine_user" {
+  default     = "admin"
+  description = "Packer will use this user and auto generated ssh_key which will be erased afterwards"
+}
+
+variable "machine_init_pwd" {
+  #packerubuntu
+  default = "$6$xyz$74AlwKA3Z5n2L6ujMzm/zQXHCluA4SRc2mBfO2/O5uUc2yM2n2tnbBMi/IVRLJuKwfjrLZjAT7agVfiK7arSy/"
+  description = "This password is a fallback and a new password should be set on first login"
+}
+
+variable "human_ssh_key_path" {
+  #default = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK5JiluJIXtH4tDDC9YwoH8VTxTpKTVVklwPTUeqZDCU flmmartins"
+  default = "~/.ssh/id_ed25519"
 }
 
 variable "ssh_timeout" {
