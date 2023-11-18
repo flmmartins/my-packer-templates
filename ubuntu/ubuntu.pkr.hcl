@@ -117,7 +117,7 @@ build {
   post-processor "vagrant" {
     output                         = "${local.output_directory}/{{.BuilderType}}/{{.Provider}}_${var.vm_name}.box"
     vagrantfile_template           = "vagrantfile.${var.vagrant_provider}.template"
-    vagrantfile_template_generated = true
     provider_override              = var.vagrant_provider
+    keep_input_artifact            = true
   }
 }
