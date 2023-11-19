@@ -9,6 +9,7 @@ After the image is generated it **also** generates:
 
 * [Vagrant Box](http://vagrantup.com). The vagrant provider will be libvirt for Qemu images and virtualbox for virtualbox images
 
+**About Qemu images:** They are in raw format because I had specific needs, but qcow2 is much much smaller
 
 # Packer How To
 
@@ -143,12 +144,12 @@ The user-data template file which instructs the OS to configure the OS initial s
 
 Additionaly I am also adding a password which will be requested to change on first login and my own SSH key to make things easier
 
-# Things I tried and it didn't went well
+## Things I tried and it didn't went well
 
-## Specify vagrant file with a templated file
+### Specify vagrant file as packer templatfile
 
 Created issue https://github.com/hashicorp/packer/issues/12700. I tried to bypass this using a post_processor shell but it didn't work because it couldn't handle the variables when creating the file.
 
-## Overwrite vagrant provider with qemu
+### Overwrite vagrant provider with qemu
 
 Using Qemu I was no able to specify `provider_override = virtualbox` due to error: Post-processor failed: ovf file couldn't be found so I removed this option.

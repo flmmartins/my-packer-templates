@@ -34,7 +34,6 @@ variable "machine_init_pwd" {
 }
 
 variable "human_ssh_key_path" {
-  #default = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK5JiluJIXtH4tDDC9YwoH8VTxTpKTVVklwPTUeqZDCU flmmartins"
   default = "~/.ssh/id_ed25519"
 }
 

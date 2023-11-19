@@ -2,6 +2,15 @@
 autoinstall:
   version: 1
   timezone: Europe/Amsterdam
+  network:
+    network:
+      version: 2
+      renderer: networkd
+      ethernets:
+        myinterface:
+          match:
+            name: en*
+          dhcp4: yes
   ssh:
     install-server: true
     allow-pw: true
