@@ -2,14 +2,15 @@
 
 Using [Packer](http://.packer.io) it generates:
 
-1. [QEMU images](https://www.qemu.org/)  
+1. [QEMU images](https://www.qemu.org/). The image is in raw format because I had specific needs, but qcow2 is much much smaller
+
 2. [VirtualBox Images](https://www.virtualbox.org/)
 
 After the image is generated it **also** generates:
 
 * [Vagrant Box](http://vagrantup.com). The vagrant provider will be libvirt for Qemu images and virtualbox for virtualbox images
 
-**About Qemu images:** They are in raw format because I had specific needs, but qcow2 is much much smaller
+PS: Libvirt and Virtualbox provider does not work with Mac M1. Check below for more. Using UTM configured manually is the only workaround for now
 
 # Packer How To
 
@@ -55,7 +56,7 @@ Since I am new to UTM. To open with it you have to:
 4. Go to Network > Emulated VLAN with network card virtio-net-pci
 5. Hit Save. Go back to Edit > Network > Now you will see Port Forwarding option. Edit the guest port to 22 and host port to anything
 
-### Fixing internet & ssh
+### Fixing internet
 Run `ip link show` and look at the last adapter name. For example, it may be listed as `enp0s1`.
 Edit `/etc/netplan/00-installer-config.yaml` and copy your configuration for `enp0s8` (or whatever the old adapter was named) and paste it immediately after for enp0s1 (or whatever the new adapter is named).
 Reboot machine or use `netplan apply` and you should be able to use networking again
@@ -153,3 +154,22 @@ Created issue https://github.com/hashicorp/packer/issues/12700. I tried to bypas
 ### Overwrite vagrant provider with qemu
 
 Using Qemu I was no able to specify `provider_override = virtualbox` due to error: Post-processor failed: ovf file couldn't be found so I removed this option.
+
+### Using libvirt plugin with Vagrant on Mac M1
+
+Couldn't make it work without instaling a lot of things due to [issue](https://gitlab.com/libvirt/libvirt/-/issues/75/). Error was:
+
+Error Error while connecting to Libvirt: Error making a connection to libvirt URI qemu:///system:
+Call to virConnectOpen failed: Failed to connect socket to '/usr/local/var/run/libvirt/virtqemud-sock': No such file or directory
+
+Some other things I have tried to overcome this but didn't work:
+
+```
+brew install libvirt
+arch -x86_64 brew install virt-manager
+brew services start libvirt
+vagrant plugin install vagrant-libvirt
+virt-manager -c "qemu:///session" --no-fork
+```
+
+I also tried to convert the box with `vagrant mutate plugin` and to use the vagrant qemu provider by following instructions [here](https://github.com/ppggff/vagrant-qemu/wiki/Create-Libvirt-Box) which leads to a corrupted box
