@@ -46,12 +46,3 @@ variable "ssh_timeout" {
 variable "boot_wait" {
   default = "3s"
 }
-
-variable "vagrant_template_file_path" {
-  default = "vagrant_templates/virtualbox/Vagrantfile-linux-server.template"
-}
-
-variable "vagrant_provider" {
-  default     = "virtualbox"
-  description = "For which platform to build the vagrant box"
-}

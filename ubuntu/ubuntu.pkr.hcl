@@ -57,7 +57,7 @@ source "qemu" "ubuntu" {
   disk_size                 = "${var.disk_size_mb}M"
   disk_compression          = true
   disk_interface            = "virtio"
-  format                    = "qcow2"
+  format                    = "raw"
   net_device                = "virtio-net"
   cpus                      = var.cpu_cores
   memory                    = var.memory_mb
@@ -115,9 +115,8 @@ build {
   }
 
   post-processor "vagrant" {
-    output                         = "${local.output_directory}/{{.BuilderType}}/{{.Provider}}_${var.vm_name}.box"
-    vagrantfile_template           = "vagrantfile.${var.vagrant_provider}.template"
-    provider_override              = var.vagrant_provider
+    output                         = "${local.output_directory}/{{.Provider}}_${var.vm_name}.box"
+    vagrantfile_template           = "vagrantfile.template"
     keep_input_artifact            = true
   }
 }

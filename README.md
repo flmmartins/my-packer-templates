@@ -2,22 +2,19 @@
 
 Using [Packer](http://.packer.io) it generates:
 
-1. Generate [QEMU images](https://www.qemu.org/)  
-
-OR
-
-2. Generate [VirtualBox Images](https://www.virtualbox.org/) using [Packer](http://.packer.io)
+1. [QEMU images](https://www.qemu.org/)  
+2. [VirtualBox Images](https://www.virtualbox.org/)
 
 After the image is generated it **also** generates:
 
-* [Vagrant Box](http://vagrantup.com) which can support multiple [providers](https://developer.hashicorp.com/packer/integrations/hashicorp/vagrant/latest/components/post-processor/vagrant). You can change that by changing the variable `vagrant_provider`
+* [Vagrant Box](http://vagrantup.com). The vagrant provider will be libvirt for Qemu images and virtualbox for virtualbox images
 
 
 # Packer How To
 
 Install the tools from the links above
 
-Flow example building 2 images: one from qemu, one from virtualbox
+Flow example building all images on the same run:
 
 ```
 packer init ubuntu
@@ -70,7 +67,7 @@ Run `vagrant init ubuntu-server`
 
 Run `vagrant up`
 
-This will generate a Vagrantfile based on the Vagranfile template.
+This will generate a Vagrantfile based on the Vagranfile template from this repository.
 
 # Box configuration details
 
@@ -145,3 +142,13 @@ In a cloud environment you would have images specially prepare for cloud so your
 The user-data template file which instructs the OS to configure the OS initial setip and user that packer will use. Instead of using ssh_username and ssh_password from packer I am generating a temporary SSH key which will be used as authentication and later removed from the image
 
 Additionaly I am also adding a password which will be requested to change on first login and my own SSH key to make things easier
+
+# Things I tried and it didn't went well
+
+## Specify vagrant file with a templated file
+
+Created issue https://github.com/hashicorp/packer/issues/12700. I tried to bypass this using a post_processor shell but it didn't work because it couldn't handle the variables when creating the file.
+
+## Overwrite vagrant provider with qemu
+
+Using Qemu I was no able to specify `provider_override = virtualbox` due to error: Post-processor failed: ovf file couldn't be found so I removed this option.

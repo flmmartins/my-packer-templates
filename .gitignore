@@ -7,7 +7,8 @@ packer_cache/**
 **.checksum
 
 # Output directory of packer
-buids/**
+**/qemu/*
+**/virtualbox-iso/*
 
 #Other
 .vagrant
