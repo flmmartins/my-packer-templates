@@ -58,6 +58,10 @@ source "qemu" "ubuntu" {
   disk_compression          = true
   disk_interface            = "virtio"
   format                    = "raw"
+  efi_boot                  = true
+  efi_firmware_code         = "my-ovmf-files/OVMF_CODE.fd"
+  efi_firmware_vars         = "my-ovmf-files/OVMF_VARS.fd"
+  use_pflash                = true
   net_device                = "virtio-net"
   cpus                      = var.cpu_cores
   memory                    = var.memory_mb

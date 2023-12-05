@@ -38,10 +38,10 @@ variable "human_ssh_key_path" {
 }
 
 variable "ssh_timeout" {
-  default     = "60m"
+  default     = "120m"
   description = "Timeout waiting for packer to ssh"
 }
 
 variable "boot_wait" {
-  default = "3s"
+  default = "10s"
 }
