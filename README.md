@@ -141,11 +141,25 @@ end
 ## Cloud Init - Preparing Image for Packer
 In a cloud environment you would have images specially prepare for cloud so your cloud users and identities can interact with it. Since on laptops I don't have this I need to create a user that packer can interact with and skip the default installation steps of Ubuntu iso.
 
-The user-data template file which instructs the OS to configure the OS initial setip and user that packer will use. Instead of using ssh_username and ssh_password from packer I am generating a temporary SSH key which will be used as authentication and later removed from the image
+The user-data template file which instructs the OS to configure the OS initial setup and user that packer will use. Instead of using ssh_username and ssh_password from packer I am generating a temporary SSH key which will be used as authentication and later removed from the image
 
 Additionaly I am also adding a password which will be requested to change on first login and my own SSH key to make things easier
 
-## Things I tried and it didn't went well
+## Things I tried and troubleshooting
+
+### Storage/Disk Issues
+
+**Disk Sizes:** For each source disk sizes have different sintax.
+
+#### UEFI Boot Issues**
+Here are the issues I faced in order to make UEFI boot to work:
+
+**Packer** You need to tell Packer to use EFI with QEMU, the OVMF files were download from a Ubuntu machine after doing an `apt-get install -y ovmf`
+
+
+**CloudInit:** I use the default storage configurations from curtin by not declaring on user-data and that wouldn't allow me to use UEFI boot not even after tweaking the order with `reorder_uefi`. According to [here](https://askubuntu.com/questions/1487504/ubuntu-22-04-autoinstall-works-on-uefi-but-not-mbr-in-virtualbox) and many other [sources](https://askubuntu.com/questions/1438902/autoinstall-support-both-efi-and-legacy-boot) 2 boot methods (UEFI and legacy bios) are not supported as part of autoinstall (subiquity). The workaround seems to consists of tricking cloud init by using the `early-commands`.
+
+**Packer Boot Issues:** Everything seems to be okey right? No, after installation is finished packer is stuck on first boot. Had to use to `late-commands`
 
 ### Specify vagrant file as packer templatfile
 
