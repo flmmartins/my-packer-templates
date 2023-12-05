@@ -151,7 +151,7 @@ Additionaly I am also adding a password which will be requested to change on fir
 
 **Disk Sizes:** For each source disk sizes have different sintax.
 
-#### UEFI Boot Issues**
+### UEFI Boot Issues
 Here are the issues I faced in order to make UEFI boot to work:
 
 **Packer** You need to tell Packer to use EFI with QEMU, the OVMF files were download from a Ubuntu machine after doing an `apt-get install -y ovmf`
@@ -160,6 +160,8 @@ Here are the issues I faced in order to make UEFI boot to work:
 **CloudInit:** I use the default storage configurations from curtin by not declaring on user-data and that wouldn't allow me to use UEFI boot not even after tweaking the order with `reorder_uefi`. According to [here](https://askubuntu.com/questions/1487504/ubuntu-22-04-autoinstall-works-on-uefi-but-not-mbr-in-virtualbox) and many other [sources](https://askubuntu.com/questions/1438902/autoinstall-support-both-efi-and-legacy-boot) 2 boot methods (UEFI and legacy bios) are not supported as part of autoinstall (subiquity). The workaround seems to consists of tricking cloud init by using the `early-commands`.
 
 **Packer Boot Issues:** Everything seems to be okey right? No, after installation is finished packer is stuck on first boot. Had to use to `late-commands`
+
+More can be found in `efi-boot` branch.
 
 ### Specify vagrant file as packer templatfile
 
