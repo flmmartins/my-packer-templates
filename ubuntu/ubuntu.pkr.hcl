@@ -107,6 +107,7 @@ build {
     "source.virtualbox-iso.ubuntu"
   ]
 
+  # TODO: Add logic to change password on first login bc chpasswd doesn't work on user-data
   provisioner "shell" {
     inline = [
       "echo Removing packer ssh key",

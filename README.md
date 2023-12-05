@@ -141,7 +141,7 @@ In a cloud environment you would have images specially prepare for cloud so your
 
 The user-data template file which instructs the OS to configure the OS initial setup and user that packer will use. Instead of using ssh_username and ssh_password from packer I am generating a temporary SSH key which will be used as authentication and later removed from the image
 
-Additionaly I am also adding a password which will be requested to change on first login and my own SSH key to make things easier
+Additionaly I am also adding a password which should be changed on first login and my own SSH key to make things easier
 
 ## Things I tried and troubleshooting
 
