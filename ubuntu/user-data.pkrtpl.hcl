@@ -5,30 +5,32 @@ autoinstall:
   network:
     network:
       version: 2
-      renderer: networkd
       ethernets:
-        myinterface:
+        eth0:
+          dhcp4: true
           match:
-            name: en*
-          dhcp4: yes
+            name: "en*"
   ssh:
     install-server: true
     allow-pw: true
   user-data:
+    runcmd:
+      - systemctl enable ssh
+      - systemctl start ssh
     users:
-    - name: ${packer_ssh_user}
-      passwd: ${machine_init_password}
-      groups: [adm, sudo]
-      sudo: ALL=(ALL) NOPASSWD:ALL
-      ssh_authorized_keys:
-      - "${human_ssh_public_key}"
-      - "${packer_ssh_key}"
-      lock-passwd: false
-      shell: /bin/bash
-    - name: vagrant
-      groups: [adm, sudo]
-      sudo: ALL=(ALL) NOPASSWD:ALL
-      ssh_authorized_keys:
-      - "${human_ssh_public_key}"
-      lock-passwd: true
-      shell: /bin/bash
+      - name: ${packer_ssh_user}
+        passwd: ${machine_init_password}
+        groups: [adm, sudo]
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        ssh_authorized_keys:
+          - "${human_ssh_public_key}"
+          - "${packer_ssh_public_key}"
+        lock-passwd: false
+        shell: /bin/bash
+      - name: vagrant
+        groups: [adm, sudo]
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        ssh_authorized_keys:
+          - "${human_ssh_public_key}"
+        lock-passwd: true
+        shell: /bin/bash

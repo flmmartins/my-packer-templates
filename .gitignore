@@ -14,3 +14,6 @@ packer_cache/**
 .vagrant
 .DS_Store
 Vagrantfile
+
+#SSH Keys
+**/packer_key*

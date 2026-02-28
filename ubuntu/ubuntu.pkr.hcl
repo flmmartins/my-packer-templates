@@ -1,24 +1,20 @@
 packer {
-    required_plugins {
-      qemu = {
-        version = "~> 1"
-        source  = "github.com/hashicorp/qemu"
-      }
-
-      virtualbox = {
-        version = "~> 1"
-        source  = "github.com/hashicorp/virtualbox"
-      }
-
-      sshkey = {
-        version = "~> 1"
-        source = "github.com/ivoronin/sshkey"
-      }
+  required_plugins {
+    qemu = {
+      version = "~> 1"
+      source  = "github.com/hashicorp/qemu"
     }
-}
 
-data "sshkey" "install" {
-  name = "packer_ssh_key"
+    virtualbox = {
+      version = "~> 1"
+      source  = "github.com/hashicorp/virtualbox"
+    }
+
+    vagrant = {
+      version = "~> 1"
+      source = "github.com/hashicorp/vagrant"
+    }
+  }
 }
 
 locals {
@@ -28,14 +24,15 @@ locals {
   output_directory   = "builds"
   virtualbox_vm_name = "virtualbox_${var.vm_name}"
   qemu_vm_name       = "qemu_${var.vm_name}"
-
+  packer_private_key = "${path.root}/${var.packer_ssh_keypair_path}"
+  packer_public_key  = file("${var.packer_ssh_keypair_path}.pub")
   cd_label     = "cidata"
   cd_content   = {
     "meta-data" = "",
     "user-data" = templatefile("user-data.pkrtpl.hcl", { 
       packer_ssh_user       = var.machine_user
-      packer_ssh_key        = data.sshkey.install.public_key
-      human_ssh_public_key  = file("${var.human_ssh_key_path}.pub")
+      packer_ssh_public_key = local.packer_public_key
+      human_ssh_public_key  = file("${var.human_ssh_pub_key_path}")
       machine_init_password = var.machine_init_pwd
     })
   }
@@ -62,9 +59,12 @@ source "qemu" "ubuntu" {
   cpus                      = var.cpu_cores
   memory                    = var.memory_mb
   ssh_username              = var.machine_user
-  ssh_private_key_file      = data.sshkey.install.private_key_path
-  ssh_clear_authorized_keys = true # Clear packeys after install
+  ssh_private_key_file      = local.packer_private_key
+  ssh_clear_authorized_keys = true # Try to clear packer ssh keys after install
   ssh_timeout               = var.ssh_timeout
+  host_port_min             = var.ssh_port
+  host_port_max             = var.ssh_port
+  ssh_port                  = var.ssh_port
   cd_label                  = local.cd_label
   cd_content                = local.cd_content
   headless                  = true # false crashes qemu
@@ -75,6 +75,16 @@ source "qemu" "ubuntu" {
   boot_command              = local.boot_command
   boot_wait                 = var.boot_wait
   shutdown_command          = "echo 'packer' | sudo -S shutdown -P now"
+  accelerator               = var.qemu_accelerator
+  machine_type              = "q35"
+  efi_boot                  = true
+  efi_firmware_code         = var.qemu_efi_firmware_code
+  efi_firmware_vars         = var.qemu_efi_firmware_vars
+  # SSH Forwarding
+  qemuargs = [
+    ["-netdev", "user,id=net0,hostfwd=tcp::${var.ssh_port}-:22"],
+    ["-device", "virtio-net-pci,netdev=net0"]
+  ]
 }
 
 source "virtualbox-iso" "ubuntu" {
@@ -86,7 +96,7 @@ source "virtualbox-iso" "ubuntu" {
   cpus                      = var.cpu_cores
   memory                    = var.memory_mb
   ssh_username              = var.machine_user
-  ssh_private_key_file      = data.sshkey.install.private_key_path
+  ssh_private_key_file      = local.packer_private_key
   ssh_clear_authorized_keys = true
   ssh_timeout               = var.ssh_timeout
   headless                  = false
@@ -107,15 +117,18 @@ build {
     "source.virtualbox-iso.ubuntu"
   ]
 
-  # TODO: Add logic to change password on first login bc chpasswd doesn't work on user-data
+  # Delete packer key and change password on next login
   provisioner "shell" {
     inline = [
-      "echo Removing packer ssh key",
-      "sed -i '/.*packer_ssh_key$/d' ~/.ssh/authorized_keys",
+      "grep -v -F -x '${local.packer_public_key}' ~/.ssh/authorized_keys > /tmp/ak.tmp",
+      "mv /tmp/ak.tmp ~/.ssh/authorized_keys",
+      "sudo passwd --expire ${var.machine_user}"
     ]
   }
 
+  # Using post processor for qemu produces a libvirt which is only supported by linux
   post-processor "vagrant" {
+    only                           = ["virtualbox-iso.ubuntu"]
     output                         = "${local.output_directory}/{{.Provider}}_${var.vm_name}.box"
     vagrantfile_template           = "vagrantfile.template"
     keep_input_artifact            = true

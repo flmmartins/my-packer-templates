@@ -1,13 +1,15 @@
 variable "vm_name" {
+  type    = string
   default = "ubuntu-server"
 }
 
 variable "iso_checksum_file_url" {
-  default = "https://releases.ubuntu.com/22.04.3/SHA256SUMS"
+  type    = string
+  default = "https://releases.ubuntu.com/24.04.4/SHA256SUMS"
 }
 
 variable "iso_url" {
-  default = "https://releases.ubuntu.com/22.04.3/ubuntu-22.04.3-live-server-amd64.iso"
+  default = "https://releases.ubuntu.com/24.04.4/ubuntu-24.04.4-live-server-amd64.iso"
 }
 
 variable "disk_size_mb" {
@@ -29,12 +31,18 @@ variable "machine_user" {
 
 variable "machine_init_pwd" {
   #packerubuntu
-  default = "$6$xyz$74AlwKA3Z5n2L6ujMzm/zQXHCluA4SRc2mBfO2/O5uUc2yM2n2tnbBMi/IVRLJuKwfjrLZjAT7agVfiK7arSy/"
-  description = "This password is a fallback and a new password should be set on first login"
+  default     = "$6$xyz$74AlwKA3Z5n2L6ujMzm/zQXHCluA4SRc2mBfO2/O5uUc2yM2n2tnbBMi/IVRLJuKwfjrLZjAT7agVfiK7arSy/"
+  description = "This password is a fallback and a new password will be prompted on first login"
 }
 
-variable "human_ssh_key_path" {
-  default = "~/.ssh/id_ed25519"
+variable "human_ssh_pub_key_path" {
+  description = "Human SSH Key public key to be installed in the VM that can assume root user"
+  default     = "~/.ssh/id_ed25519.pub"
+}
+
+variable "packer_ssh_keypair_path" {
+  default     = "packer_key"
+  description = "SSH Private and Public Key Pair used by packer. It assumes both keys exist packer_key and packer_key.pub inside ubuntu repository folder"
 }
 
 variable "ssh_timeout" {
@@ -42,6 +50,32 @@ variable "ssh_timeout" {
   description = "Timeout waiting for packer to ssh"
 }
 
+variable "ssh_port" {
+  default = 2222
+}
+
 variable "boot_wait" {
-  default = "3s"
+  type        = string
+  description = "Wait for machine boot after before installing"
+  default     = "3s"
+}
+
+###############################
+# PACKER HOST CONFIGURATION
+###############################
+# This configuration depends on where you are using packer cli
+
+variable "qemu_efi_firmware_code" {
+  description = "Use this to enable UEFI boot. Defaults to mac file path but if in linux use /usr/share/OVMF/OVMF_CODE.fd after instal it with sudo apt install -y packer ovmf"
+  default     = "/opt/homebrew/share/qemu/edk2-x86_64-code.fd"
+}
+
+variable "qemu_efi_firmware_vars" {
+  description = "Use this to enable UEFI boot. Defaults to mac file path but if in linux use /usr/share/OVMF/OVMF_VARS.fd after instal it with sudo apt install -y packer ovmf"
+  default     = "/opt/homebrew/share/qemu/edk2-i386-vars.fd"
+}
+
+variable "qemu_accelerator" {
+  description = "For linux use kvm to build images faster. For mac you can use however hvf only supports x86_64 on Intel Macs. If you're on Apple Silicon (M1/M2/M3) building an amd64 Ubuntu image, you can't use hvf for x86 emulation"
+  default     = "tcg"
 }

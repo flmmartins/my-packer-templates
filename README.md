@@ -1,8 +1,8 @@
 # Repository goals
 
-Using [Packer](http://.packer.io) it generates:
+Using [Packer](https://developer.hashicorp.com/packer/install) it generates:
 
-1. [QEMU images](https://www.qemu.org/). The image is in raw format because I had specific needs, but qcow2 is much much smaller
+1. [QEMU images](https://www.qemu.org/download/#macos). The image is in raw format because I had specific needs, but qcow2 is much much smaller
 
 2. [VirtualBox Images](https://www.virtualbox.org/)
 
@@ -15,6 +15,17 @@ PS: Libvirt and Virtualbox provider does not work with Mac M1. Check below for m
 # Packer How To
 
 Install the tools from the links above
+
+In order to run packer you need to create a SSH key pair for packer to run on the root of this repository:
+
+```
+ssh-keygen -t ed25519 -f ubuntu/packer_key -N "" -C packer_key
+```
+
+This code also fetches the **public** ssh key from your user and put as the root user of the machine.
+
+If rather have other keys change variables however only absolute paths are allowed or relative to ubuntu folder
+
 
 Flow example building all images on the same run:
 
@@ -35,6 +46,8 @@ packer build -only=qemu.ubuntu ubuntu
 packer build -only=virtualbox-iso.ubuntu ubuntu
 ```
 
+When using virtualbox image it will build a .box file which can be used along side Vagrant
+
 *Build Options:*
 * -var-file=packer/vars/ubuntu-jammy-server.pkrvars.hcl -> Use a vars file if needed
 * -on-error=[cleanup|abort|ask|run-cleanup-provisioner] If the build fails do: clean up (default), abort, ask, or run-cleanup-provisioner.
@@ -54,12 +67,6 @@ Since I am new to UTM. To open with it you have to:
 3. Go to Disk > Delete existing > Add new one > Import > Select image and user Virtio as interface
 4. Go to Network > Emulated VLAN with network card virtio-net-pci
 5. Hit Save. Go back to Edit > Network > Now you will see Port Forwarding option. Edit the guest port to 22 and host port to anything
-
-### Fixing internet
-This was fixed and should no longer be necessary but I am leaving it here if happens again. 
-Run `ip link show` and look at the last adapter name. For example, it may be listed as `enp0s1`.
-Edit `/etc/netplan/00-installer-config.yaml` and copy your configuration for `enp0s8` (or whatever the old adapter was named) and paste it immediately after for enp0s1 (or whatever the new adapter is named).
-Reboot machine or use `netplan apply` and you should be able to use networking again
 
 ## Using Vagrant boxes
 
@@ -139,7 +146,7 @@ Why I took some decisions, issues faced and etc.
 ## Cloud Init - Preparing Image for Packer
 In a cloud environment you would have images specially prepare for cloud so your cloud users and identities can interact with it. Since on laptops I don't have this I need to create a user that packer can interact with and skip the default installation steps of Ubuntu iso.
 
-The user-data template file which instructs the OS to configure the OS initial setup and user that packer will use. Instead of using ssh_username and ssh_password from packer I am generating a temporary SSH key which will be used as authentication and later removed from the image
+The user-data template file which instructs the OS to configure the OS initial setup and user that packer will use
 
 Additionaly I am also adding a password which should be changed on first login and my own SSH key to make things easier
 
@@ -170,6 +177,8 @@ Created issue https://github.com/hashicorp/packer/issues/12700. I tried to bypas
 Using Qemu I was no able to specify `provider_override = virtualbox` due to error: Post-processor failed: ovf file couldn't be found so I removed this option.
 
 ### Using libvirt plugin with Vagrant on Mac M1
+
+Vagrant post-processor can also be used by qemu however it generates a libvirt box which is only compatible with Linux however I try to make it work with Mac but had many issues:
 
 Couldn't make it work without instaling a lot of things due to [issue](https://gitlab.com/libvirt/libvirt/-/issues/75/). Error was:
 
