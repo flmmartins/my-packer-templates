@@ -8,7 +8,6 @@ packer_cache/**
 
 # Output directory of packer
 **/qemu/*
-**/virtualbox-iso/*
 
 #Other
 .vagrant

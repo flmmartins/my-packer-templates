@@ -35,9 +35,9 @@ variable "machine_init_pwd" {
   description = "This password is a fallback and a new password will be prompted on first login"
 }
 
-variable "human_ssh_pub_key_path" {
-  description = "Human SSH Key public key to be installed in the VM that can assume root user"
-  default     = "~/.ssh/id_ed25519.pub"
+variable "human_ssh_key_path" {
+  description = "Human SSH key to be installed in the VM that can assume root user. The public key will be inside the machine and the private will be used to instruct vagrant which key to use when doing vagrant up"
+  default     = "~/.ssh/id_ed25519"
 }
 
 variable "packer_ssh_keypair_path" {
@@ -78,4 +78,14 @@ variable "qemu_efi_firmware_vars" {
 variable "qemu_accelerator" {
   description = "For linux use kvm to build images faster. For mac you can use however hvf only supports x86_64 on Intel Macs. If you're on Apple Silicon (M1/M2/M3) building an amd64 Ubuntu image, you can't use hvf for x86 emulation"
   default     = "tcg"
+}
+
+variable "qemu_machine_type" {
+  description = "Qemu machine type to emulate. It can be pc (legacy), q35 for UEFI/OVMF and virt for ARM"
+  default     = "q35"
+}
+
+variable "qemu_machine_format" {
+  description = "Output machine format. Valid values are raw, qcow2 (best for qemu), vmdk, vdi"
+  default     = "qcow2"
 }
