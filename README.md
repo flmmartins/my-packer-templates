@@ -70,6 +70,8 @@ Vagrant it will use the automatic generated file Vagrantfile in the root of the 
 
 Run `vagrant up`
 
+It can take some time for machine to boot. If some how you see a SSH port error it could be vagrant hasn't release it. You can find the process and kill it with `lsof -i :50022`
+
 ### Running ansible from Vagrantfile
 Add the below to your Vagrantfile
 

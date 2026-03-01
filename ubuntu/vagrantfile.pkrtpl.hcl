@@ -1,5 +1,6 @@
 Vagrant.configure("2") do |config|
   config.vm.box     = "${vm_name}"
+  config.vm.boot_timeout = 1200
   config.vm.box_url = "${box_output}"
   config.vm.provider :qemu do |qemu|
     qemu.memory     = "${memory_mb}M"
