@@ -19,7 +19,7 @@ autoinstall:
       - systemctl start ssh
     users:
       - name: ${packer_ssh_user}
-        passwd: ${machine_init_password}
+        passwd: ${machine_pwd_hashed}
         groups: [adm, sudo]
         sudo: ALL=(ALL) NOPASSWD:ALL
         ssh_authorized_keys:

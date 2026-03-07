@@ -25,13 +25,12 @@ variable "memory_mb" {
 }
 
 variable "machine_user" {
-  default     = "admin"
+  default     = "root"
   description = "Packer will use this user and auto generated ssh_key which will be erased afterwards"
 }
 
-variable "machine_init_pwd" {
-  #packerubuntu
-  default     = "$6$xyz$74AlwKA3Z5n2L6ujMzm/zQXHCluA4SRc2mBfO2/O5uUc2yM2n2tnbBMi/IVRLJuKwfjrLZjAT7agVfiK7arSy/"
+variable "machine_pwd_hashed" {
+  type        = string
   description = "This password is a fallback and a new password will be prompted on first login"
 }
 

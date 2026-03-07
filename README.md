@@ -10,7 +10,7 @@ The admin password will be changed on first login and there's also a vagrant use
 
 # Packer How To
 
-Install the tools from the links above:
+**Install** the tools from the links above:
 
 ```
 brew tap hashicorp/tap
@@ -20,6 +20,7 @@ brew install vagrant
 vagrant plugin install vagrant-qemu
 
 ```
+**SSH Keys**
 
 In order to run packer you need to create a SSH key pair for packer to run on the root of this repository:
 
@@ -30,6 +31,15 @@ ssh-keygen -t ed25519 -f ubuntu/packer_key -N "" -C packer_key
 This code also fetches the **public** ssh key from your user and put as the root user of the machine.
 
 If rather have other keys change variables however only absolute paths are allowed or relative to ubuntu folder
+
+**Passwords**
+
+You can generate passwords by doing:
+
+```
+docker run --rm ubuntu:24.04 bash -c "apt-get update && apt-get install -y openssl && openssl passwd -6 'a_password'"
+```
+
 
 You can then run with:
 

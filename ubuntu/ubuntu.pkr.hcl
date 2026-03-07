@@ -25,7 +25,7 @@ locals {
       packer_ssh_user       = var.machine_user
       packer_ssh_public_key = local.packer_public_key
       human_ssh_public_key  = file("${var.human_ssh_key_path}.pub")
-      machine_init_password = var.machine_init_pwd
+      machine_pwd_hashed    = var.machine_pwd_hashed
     })
   }
 
