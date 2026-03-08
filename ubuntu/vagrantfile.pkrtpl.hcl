@@ -12,6 +12,5 @@ Vagrant.configure("2") do |config|
   end
   config.ssh.private_key_path = "${private_key_path}"
   config.ssh.forward_agent    = true
-  config.vm.network "public_network"
   config.vm.synced_folder ".", "/vagrant", type: "rsync"
 end

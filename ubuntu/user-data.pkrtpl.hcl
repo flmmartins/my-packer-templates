@@ -12,7 +12,7 @@ autoinstall:
             name: "en*"
   ssh:
     install-server: true
-    allow-pw: true
+    allow-pw: false
   user-data:
     runcmd:
       - systemctl enable ssh

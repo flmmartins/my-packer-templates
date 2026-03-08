@@ -14,5 +14,6 @@ packer_cache/**
 .DS_Store
 Vagrantfile
 
-#SSH Keys
+#Keys
 **/packer_key*
+secrets.pkrvars.hcl
